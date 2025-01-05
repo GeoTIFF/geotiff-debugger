@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://unpkg.com/geotiff"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        position: relative;
+      }
+
+      textarea {
+        height: 400px;
+        width: 100%;
+      }
+
+      #url {
+        width: 100%;
+      }
+    </style>
+    <script>
+      window.app = {
+        state: {
+
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>GeoTIFF Debugger</h1>
+
+    <h3>Enter a URL to a GeoTIFF</h3>
+    <input id="url" type="text">
+    <button id="load">Load</button>
+
+    <div id="results" style="display: none">
+      <h3>const tif = await GeoTIFF.fromUrl(url);</h3>
+      <h3>const im = await tif.getImage();</h3>
+      <h3>const fd = await im.fileDirectory;</h3>
+      <textarea id="fd-value"></textarea>
+    </div>
+
+    <script>
+      document.getElementById("load").addEventListener("click", function (evt) {
+        (async function () {
+          const url = document.getElementById("url").value;
+          if (url.trim() === "") return;
+
+          const tif = await GeoTIFF.fromUrl(url);
+
+          const im = await tif.getImage();
+
+          const fd = await im.fileDirectory;
+          document.getElementById("fd-value").value = JSON.stringify(fd, undefined, 2);
+
+          document.getElementById("results").style.display = "block";
+        })();
+      });
+    </script>
+  </body>
+</html>
